@@ -99,10 +99,13 @@ class Simulation(object):
     BELIEF_UPDATE_THRESHOLD = 0.6
 
     # these are used for generating the initial states of the patches
+    ##Q: please explain 
     INIT_BELIEVE_THRESHOLD = 0.6
     INIT_DISBELIEVE_THRESHOLD = 0.3
 
     # TODO: implement algorithm for generating small-world networks
+    ##Q: the grid version is not common in the literature. 
+    ##Q: I will send some examples that use connected_watts_strogatz_graph
 
     def __init__(self, nr_patches=NR_PATCHES,
                  nr_of_experts=NR_OF_EXPERTS,
@@ -195,7 +198,8 @@ class Simulation(object):
 
     def generate_patch(self, id, pos):
         return Patch(id=id, pos=pos)
-
+    
+    ##Q: can we mark the expert node?
     def add_experts(self):
         for i in range(self.nr_of_experts):
             while True:
@@ -220,6 +224,8 @@ class Simulation(object):
             Belief.DISBELIEVE: len(self.belief.disbelieve_patches),
             Belief.UNDECIDED: len(self.belief.undecided_patches)})
 
+    ##Q: the graph below is the initial state right? 
+    ##Q: can we draw a end state?
     def draw_graph(self):
         pylab.figure(1, figsize=(8, 8))
         nx.draw(self.graph, {patch: patch.pos for patch in self.graph.nodes()},
@@ -287,7 +293,7 @@ class Simulation(object):
             Belief.DISBELIEVE: 0,
         }
         total_friends = len(self.graph[patch])
-        if total_friends == 0:  # who can influence him?
+        if total_friends == 0:  # who can influence him? ##Q: currently we are only looking at connected graphs.
             return influence
         for friend in self.graph[patch]:
             state = self.belief.get_belief(friend)
